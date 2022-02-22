@@ -4,6 +4,7 @@
 
 extern int cWhite;
 
+//ステータスの構造体　敵味方共用
 typedef struct {
 	char name[256];
 	int Lv;
@@ -13,13 +14,17 @@ typedef struct {
 	int MP;
 }STATUS;
 
+//Charaクラス　自分のクラス
 class Chara
 {
 public:
 	STATUS c_sta;
+	//名前の設定(カプセル化)
 	void p_setName() {
 		setName(c_sta.name);
 	}
+	//セーブデータロード時に名前がファイルに存在しなかった場合
+	//ステータスは初期化する
 	int Load() {
 		if (c_sta.name[0] == '\0') {
 			c_sta.ATK[0] = 10;
@@ -36,6 +41,7 @@ public:
 		}
 	}
 private:
+	//名前の設定
 	void setName(char name[256]) {
 		bool finish = false;
 		while (finish != true) {
@@ -47,6 +53,8 @@ private:
 	}
 };
 
+//TODO
+//武器の構造体　未完成
 class Weapons {
 public:
 	int w_num;

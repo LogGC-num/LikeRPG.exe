@@ -1,8 +1,8 @@
-#include<DxLib.h>
-#include<conio.h>
-#include"myfuncs.h"
+#include <DxLib.h>
+#include <conio.h>
+#include "myfuncs.h"
 #include "Chara.h"
-
+#include "UI.h"
 
 static int mStartTime;      //測定開始時刻
 static int mCount;          //カウンタ
@@ -16,9 +16,10 @@ int gFontTitle;
 int gFontSubTitle;
 int cRad;
 
+//アプリケーション自体の設定等
 void SetUp() {
 	SetGraphMode(1280, 720, 32);
-	SetWindowSize(1280, 720);
+	SetWindowSize(WINDOW_SIZE_Bes,WINDOW_SIZE_Ver);
 	ChangeWindowMode(TRUE), // ウィンドウモードに設定
 	DxLib_Init(),		// ＤＸライブラリ初期化処理
 	SetDrawScreen(DX_SCREEN_BACK); //描画先を裏画面に設定
@@ -76,32 +77,95 @@ int gpUpdateKey() {
 	return 0;
 }
 
+//ファイル処理
 int Data_Save(Chara *chara) {
+	//ファイルクラスのポインタを生成
 	FILE* fp;
+	//セキュリティー強化fopen_sでは返り値がerrno_tで宣言されている
 	errno_t er;
+	//もしファイルが開けなかったら例外を返却、main()内でアプリを強制終了
 	if (0 != (er =fopen_s(&fp, "SaveData.dat", "wb"))) {
 		return -1;
 	}
+	//Charaクラスのステータスを全部格納
 	fprintf_s(fp, "%s\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", chara->c_sta.name,chara->c_sta.Lv,
 		chara->c_sta.ATK[0], chara->c_sta.ATK[1], chara->c_sta.ATK[2], chara->c_sta.DEF,
 		chara->c_sta.HP,chara->c_sta.MP
 		);
-
+	//ファイルを閉じる
 	fclose(fp);
 	return 0;
 }
 
 int Data_Load(Chara *chara) {
+	//Data_Save()と同じ
 	FILE* fp;
 	errno_t er;
 	if (0 != (er = fopen_s(&fp, "SaveData.dat", "rb"))) {
 		return -1;
 	}
+	//セキュリティー強化fscanf_sでは文字列を取得する場合、その一つ後ろの引数は最大バッファになる
+	//Charaクラスのステータスを全部取得
 	fscanf_s(fp, "%s\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", chara->c_sta.name,256, &chara->c_sta.Lv,
 		&chara->c_sta.ATK[0], &chara->c_sta.ATK[1], &chara->c_sta.ATK[2], &chara->c_sta.DEF,
 		&chara->c_sta.HP, &chara->c_sta.MP
 	);
-
+	//ファイルを閉じる
 	fclose(fp);
 	return 0;
+}
+
+//タイトル
+int Title() {
+	//UI.h及びUI.cppのUI_Title()の引数
+	int select = 0;
+	//ここはキー入力を伴うためループ
+	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
+
+		//キー入力
+		//↓で下へ　↑で上へ　Enterで決定
+		if (Key[KEY_INPUT_DOWN] == 1) {
+			select--;
+		}
+		if (Key[KEY_INPUT_UP] == 1) {
+			select++;
+		}
+		if (Key[KEY_INPUT_RETURN] == 1) {
+			//selectは負になる可能性があるので正にする
+			return (select > 0 ? select % 5 : -select % 5);
+		}
+		UI_title(select > 0 ? select % 5 : -select % 5);
+		//Debug
+		DrawFormatString(10, 10, cWhite, "%d:%d", select % 5, select);
+	}
+
+	//もし正常に終了した場合Enterでのif文内で終了するためエラーの返り値は-1になる
+	return -1;
+}
+//以下debug
+void Game() {
+	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
+		printfDx("Game");
+		if (Key[KEY_INPUT_0] == 1) {
+			break;
+		}
+	}
+}
+
+void Data() {
+	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
+		printfDx("Data");
+		if (Key[KEY_INPUT_0] == 1) {
+			break;
+		}
+	}
+}
+
+void Edit() {
+	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
+		printfDx("Edit");
+		if (Key[KEY_INPUT_0] == 1) {
+			break;
+		}
+	}
 }
