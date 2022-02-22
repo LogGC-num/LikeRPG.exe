@@ -16,14 +16,6 @@ int gpUpdateKey();
 
 //タイトル
 int Title();
-//以下Esc()までDegug
-void Game();
-
-void Data();
-
-void Edit();
-
-void Esc();
 
 //ファイル処理
 int Data_Save(Chara*);

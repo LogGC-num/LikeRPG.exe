@@ -121,51 +121,22 @@ int Title() {
 	int select = 0;
 	//ここはキー入力を伴うためループ
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
-
 		//キー入力
 		//↓で下へ　↑で上へ　Enterで決定
-		if (Key[KEY_INPUT_DOWN] == 1) {
-			select--;
-		}
-		if (Key[KEY_INPUT_UP] == 1) {
+		if (Key[KEY_INPUT_DOWN] % 10 == 1 || Key[KEY_INPUT_DOWN] > 60) {
 			select++;
 		}
-		if (Key[KEY_INPUT_RETURN] == 1) {
-			//selectは負になる可能性があるので正にする
-			return (select > 0 ? select % 5 : -select % 5);
+		if (Key[KEY_INPUT_UP] % 10 == 1 || Key[KEY_INPUT_UP] > 60) {
+			select--;
 		}
-		UI_title(select > 0 ? select % 5 : -select % 5);
-		//Debug
-		DrawFormatString(10, 10, cWhite, "%d:%d", select % 5, select);
+		//selectは負になる可能性があるので正にする
+		select > 0 ? select : select += 5;
+		if (Key[KEY_INPUT_RETURN] == 1) {
+			return (select % 5);
+		}
+		UI_title(select % 5);
 	}
 
 	//もし正常に終了した場合Enterでのif文内で終了するためエラーの返り値は-1になる
 	return -1;
-}
-//以下debug
-void Game() {
-	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
-		printfDx("Game");
-		if (Key[KEY_INPUT_0] == 1) {
-			break;
-		}
-	}
-}
-
-void Data() {
-	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
-		printfDx("Data");
-		if (Key[KEY_INPUT_0] == 1) {
-			break;
-		}
-	}
-}
-
-void Edit() {
-	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
-		printfDx("Edit");
-		if (Key[KEY_INPUT_0] == 1) {
-			break;
-		}
-	}
 }

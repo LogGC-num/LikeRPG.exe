@@ -61,3 +61,8 @@ public:
 	int type;
 	STATUS w_sta;
 };
+
+typedef struct {
+	char name[256];
+	int type;
+}Enemy_infomation;
