@@ -37,6 +37,9 @@ void UI_title(int select) {
 		else {
 			s_title[i].x = WINDOW_SIZE_Bes / 2 + 20; 
 		}
+		if (i == 0 || i == 2) {
+			DrawFormatStringToHandle(s_title[i].x - 200, s_title[i].y, cWhite, gFont00, "developing...");
+		}
 		DrawFormatStringToHandle(s_title[i].x, s_title[i].y, cWhite, gFont00, s_title[i].choice);
 	}
 }

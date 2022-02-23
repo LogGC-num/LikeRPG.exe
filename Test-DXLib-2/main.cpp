@@ -31,6 +31,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//ステータスの初期化と名前の入力を行う
 	if (chara.Load()) {
 		chara.p_setName();
+		Data_Save(&chara);
 	}
 
 	bool App_End = false;
