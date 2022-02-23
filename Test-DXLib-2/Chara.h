@@ -5,10 +5,11 @@
 extern int cWhite;
 
 //ステータスの構造体　敵味方共用
-typedef struct {
+typedef struct _STATUS{
 	char name[256];
 	int Lv;
 	int HP;
+	int MaxHP;
 	int ATK[3];
 	int DEF;
 	int MP;
@@ -23,6 +24,9 @@ public:
 	void p_setName() {
 		setName(c_sta.name);
 	}
+
+	int check_status(Chara*);
+
 	//セーブデータロード時に名前がファイルに存在しなかった場合
 	//ステータスは初期化する
 	int Load() {
@@ -32,6 +36,7 @@ public:
 			c_sta.ATK[2] = 10;
 			c_sta.DEF = 10;
 			c_sta.HP = 100;
+			c_sta.MaxHP = 100;
 			c_sta.Lv = 1;
 			c_sta.MP = 10;
 			return 1;
@@ -62,7 +67,7 @@ public:
 	STATUS w_sta;
 };
 
-typedef struct {
+typedef struct _Enemy_infomation {
 	char name[256];
 	int type;
 }Enemy_infomation;

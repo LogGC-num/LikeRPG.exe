@@ -42,9 +42,9 @@ int Load_All_Data(Chara *c_Data,Dungeon *Dun) {
 		return -1;
 	}
 	//Charaクラスのステータスを全部格納
-	fscanf_s(fp, "%s\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", c_Data->c_sta.name, 256, &c_Data->c_sta.Lv,
+	fscanf_s(fp, "%s\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", c_Data->c_sta.name, 256, &c_Data->c_sta.Lv,
 		&c_Data->c_sta.ATK[0], &c_Data->c_sta.ATK[1], &c_Data->c_sta.ATK[2], &c_Data->c_sta.DEF,
-		&c_Data->c_sta.HP, &c_Data->c_sta.MP
+		&c_Data->c_sta.HP,&c_Data->c_sta.MaxHP, &c_Data->c_sta.MP
 	);
 	//int型のデータをchar型に変換
 	_itoa_s(c_Data->c_sta.ATK[0], char_Data[0], 16, 10);
@@ -52,14 +52,15 @@ int Load_All_Data(Chara *c_Data,Dungeon *Dun) {
 	_itoa_s(c_Data->c_sta.ATK[2], char_Data[2], 16, 10);
 	_itoa_s(c_Data->c_sta.DEF, char_Data[3], 16, 10);
 	_itoa_s(c_Data->c_sta.HP, char_Data[4], 16, 10);
-	_itoa_s(c_Data->c_sta.Lv, char_Data[5], 16, 10);
-	_itoa_s(c_Data->c_sta.MP, char_Data[6], 16, 10);
+	_itoa_s(c_Data->c_sta.MaxHP, char_Data[5], 16, 10);
+	_itoa_s(c_Data->c_sta.Lv, char_Data[6], 16, 10);
+	_itoa_s(c_Data->c_sta.MP, char_Data[7], 16, 10);
 
 	//ファイルを閉じる
 	fclose(fp);
 
 	//ファイルを開く
-	if (0 != (er = fopen_s(&fp, "DataDungeon.dat", "rb"))) {
+	if (0 != (er = fopen_s(&fp, "DataDungeon.dat", "rb")) || fp == 0) {
 		return -1;
 	}
 
@@ -80,11 +81,12 @@ int Save_All_Data() {
 
 //ステータス名の配列
 char Status_name[16][64] = {
-	{"ATK type1"},
-	{"ATK type2"},
-	{"ATK type3"},
+	{"ATK.1"},
+	{"ATK.2"},
+	{"ATK.3"},
 	{"DEF"},
 	{"HP"},
+	{"MaxHP"},
 	{"Lv"},
 	{"MP"},
 };
@@ -101,7 +103,7 @@ void Draw_Status(Chara chara) {
 	DrawStringToHandle(10, 10, "Your Status", cWhite, gFont00, FALSE, FALSE);
 	DrawStringToHandle(Coordinate[0]-250, Coordinate[1], "What your Name?", cWhite, gFont00, FALSE, FALSE);
 	DrawStringToHandle(Coordinate[0], Coordinate[1], chara.c_sta.name, cWhite, gFont00, FALSE, FALSE);
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 7; i++) {
 		DrawStringToHandle(Coordinate[0] - 250, Coordinate[1] += 40, Status_name[i], cWhite, gFont00, FALSE, FALSE);
 		DrawStringToHandle(Coordinate[0], Coordinate[1], char_Data[i], cWhite, gFont00, FALSE, FALSE);
 	}
@@ -111,7 +113,7 @@ void Draw_Status(Chara chara) {
 extern char Enemy_type[16][64];
 
 void Draw_Dungeon(Dungeon Dun) {
-	int Coordinate[2] = { WINDOW_SIZE_Bes / 3,WINDOW_SIZE_Ver / 8 + 240 };
+	int Coordinate[2] = { WINDOW_SIZE_Bes / 3,WINDOW_SIZE_Ver / 8 + 300 };
 	DrawStringToHandle(10, Coordinate[1] += 40, "Dungeons Data", cWhite, gFont00, FALSE, FALSE);
 
 	for (int i = 0; i < 3; i++) {

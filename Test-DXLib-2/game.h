@@ -3,3 +3,7 @@
 #include "myfuncs.h"
 #include <conio.h>
 #include "Chara.h"
+
+int Game_main(Chara*);
+bool Gameover();
+void GameError();

@@ -4,6 +4,7 @@
 #include "Chara.h"
 #include "UI.h"
 #include "Data.h"
+#include "game.h"
 
 
 extern int Key[256];
@@ -26,21 +27,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 0;
 	}
 
-	//セーブデータをロード
-	//もし、セーブデータ内に名前が存在しない場合
-	//ステータスの初期化と名前の入力を行う
-	if (chara.Load()) {
-		chara.p_setName();
-		Data_Save(&chara);
-	}
-
 	bool App_End = false;
 	//例外もしくはEsc...を押さないとアプリを終了しない
 	while (App_End != true) {
 		//タイトルの表示
 		switch (Title()) {
 			//Game.cpp及びGame.hへ
-		case 0:								break;
+		case 0:
+			//もしGameが例外参照した場合アプリを強制終了
+			if (Game_main(&chara) == -1) {
+				DxLib_End(); return 0;
+			}
+			break;
 			//Data.cpp及びData.hへ
 		case 1:		Data();					break;
 			//Edit.cpp及びEdit.hへ

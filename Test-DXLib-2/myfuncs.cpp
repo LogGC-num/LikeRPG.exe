@@ -84,14 +84,14 @@ int Data_Save(Chara *chara) {
 	//セキュリティー強化fopen_sでは返り値がerrno_tで宣言されている
 	errno_t er;
 	//もしファイルが開けなかったら例外を返却、main()内でアプリを強制終了
-	if (0 != (er =fopen_s(&fp, "SaveData.dat", "wb"))) {
+	if ((er = fopen_s(&fp, "SaveData.dat", "wb")) != 0 || fp == 0) {
 		return -1;
 	}
 	//Charaクラスのステータスを全部格納
-	fprintf_s(fp, "%s\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", chara->c_sta.name,chara->c_sta.Lv,
+	fprintf_s(fp, "%s\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", chara->c_sta.name, chara->c_sta.Lv,
 		chara->c_sta.ATK[0], chara->c_sta.ATK[1], chara->c_sta.ATK[2], chara->c_sta.DEF,
-		chara->c_sta.HP,chara->c_sta.MP
-		);
+		chara->c_sta.HP, chara->c_sta.MaxHP, chara->c_sta.MP
+	);
 	//ファイルを閉じる
 	fclose(fp);
 	return 0;
@@ -101,14 +101,14 @@ int Data_Load(Chara *chara) {
 	//Data_Save()と同じ
 	FILE* fp;
 	errno_t er;
-	if (0 != (er = fopen_s(&fp, "SaveData.dat", "rb"))) {
+	if ((er = fopen_s(&fp, "SaveData.dat", "rb")) != 0 || fp == 0) {
 		return -1;
 	}
 	//セキュリティー強化fscanf_sでは文字列を取得する場合、その一つ後ろの引数は最大バッファになる
 	//Charaクラスのステータスを全部取得
-	fscanf_s(fp, "%s\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", chara->c_sta.name,256, &chara->c_sta.Lv,
+	fscanf_s(fp, "%s\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", chara->c_sta.name, 256, &chara->c_sta.Lv,
 		&chara->c_sta.ATK[0], &chara->c_sta.ATK[1], &chara->c_sta.ATK[2], &chara->c_sta.DEF,
-		&chara->c_sta.HP, &chara->c_sta.MP
+		&chara->c_sta.HP, &chara->c_sta.MaxHP, &chara->c_sta.MP
 	);
 	//ファイルを閉じる
 	fclose(fp);
