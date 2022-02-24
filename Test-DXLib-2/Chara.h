@@ -3,6 +3,7 @@
 #include "myfuncs.h"
 
 extern int cWhite;
+//extern int cOrange;
 
 //ステータスの構造体　敵味方共用
 typedef struct _STATUS{

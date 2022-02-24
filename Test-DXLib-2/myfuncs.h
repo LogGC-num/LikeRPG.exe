@@ -1,6 +1,7 @@
 #pragma once
 #include "DxLib.h"
 #include "Chara.h"
+
 class Chara;
 #define DIFFICULT 5
 #define WINDOW_SIZE_Bes 1280

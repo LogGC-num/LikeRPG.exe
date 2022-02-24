@@ -15,6 +15,7 @@ int gFont00;
 int gFontTitle;
 int gFontSubTitle;
 int cRad;
+int cOrange;
 
 //アプリケーション自体の設定等
 void SetUp() {
@@ -26,6 +27,7 @@ void SetUp() {
 
 	cWhite = GetColor(255, 255, 255);
 	cRad = GetColor(255, 0, 0);
+	cOrange = GetColor(240, 128, 128);
 	gFont00 = CreateFontToHandle("メイリオ", 25, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
 	gFontTitle = CreateFontToHandle("メイリオ", 100, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
 	gFontSubTitle = CreateFontToHandle("メイリオ", 75, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
