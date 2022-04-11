@@ -3,6 +3,7 @@
 #include "Chara.h"
 
 class Chara;
+struct Dungeon;
 #define DIFFICULT 5
 #define WINDOW_SIZE_Bes 1280
 #define WINDOW_SIZE_Ver 720
@@ -21,4 +22,5 @@ int Title();
 //ƒtƒ@ƒCƒ‹ˆ—
 int Data_Save(Chara*);
 int Data_Load(Chara*);
+int Data_Save_D(Dungeon*);
 

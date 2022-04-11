@@ -17,6 +17,7 @@ int gFontSubTitle;
 int cRad;
 int cOrange;
 
+
 //アプリケーション自体の設定等
 void SetUp() {
 	SetGraphMode(1280, 720, 32);
@@ -141,4 +142,20 @@ int Title() {
 
 	//もし正常に終了した場合Enterでのif文内で終了するためエラーの返り値は-1になる
 	return -1;
+}
+
+int Data_Save_D(Dungeon *dun) {
+	//ファイルクラスのポインタを生成
+	FILE* fp;
+	//セキュリティー強化fopen_sでは返り値がerrno_tで宣言されている
+	errno_t er;
+	//もしファイルが開けなかったら例外を返却、main()内でアプリを強制終了
+	if ((er = fopen_s(&fp, "DataDungeon.dat", "wb")) != 0 || fp == 0) {
+		return -1;
+	}
+	//Charaクラスのステータスを全部格納
+	fprintf_s(fp, "%d\n%d\n%d\n", dun->Floor,dun->Lv,dun->Ene_Type);
+	//ファイルを閉じる
+	fclose(fp);
+	return 0;
 }

@@ -4,14 +4,7 @@
 #include <conio.h>
 #include "Chara.h"
 #include "UI.h"
-#include "Data.h"
 
-//Debug
-typedef struct {
-	int Floor;
-	int Lv;
-	int Ene_Type;
-}Dungeon;
 
 //Data.h“àŠÖ”‚ÌŠÇ—ƒƒ\ƒbƒh
 int Data();

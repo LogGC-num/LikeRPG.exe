@@ -41,11 +41,17 @@ int Load_All_Data(Chara *c_Data,Dungeon *Dun) {
 	if (0 != (er = fopen_s(&fp, "SaveData.dat", "rb"))) {
 		return -1;
 	}
+	fpos_t fsize = 0;
 	//Charaクラスのステータスを全部格納
 	fscanf_s(fp, "%s\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", c_Data->c_sta.name, 256, &c_Data->c_sta.Lv,
 		&c_Data->c_sta.ATK[0], &c_Data->c_sta.ATK[1], &c_Data->c_sta.ATK[2], &c_Data->c_sta.DEF,
 		&c_Data->c_sta.HP,&c_Data->c_sta.MaxHP, &c_Data->c_sta.MP
 	);
+	fseek(fp,0,SEEK_END);
+	fgetpos(fp, &fsize);
+	if (fsize == 0) {
+		c_Data->c_sta.name[0] = '\0';
+	}
 	//int型のデータをchar型に変換
 	_itoa_s(c_Data->c_sta.ATK[0], char_Data[0], 16, 10);
 	_itoa_s(c_Data->c_sta.ATK[1], char_Data[1], 16, 10);

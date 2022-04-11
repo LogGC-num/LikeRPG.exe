@@ -4,6 +4,7 @@
 #include <conio.h>
 #include "Chara.h"
 #include "UI.h"
+#include "Data.h"
 
 #define ATTACK	0
 #define ITEM	1
@@ -12,7 +13,9 @@
 extern int Key[256];
 extern int gFont00;
 
-int Game_main(Chara *chara) {
+void Clear();
+
+int Game_main(Chara *chara,Dungeon *d_ene) {
 	//セーブデータをロード
 	//もし、セーブデータ内に名前が存在しない場合
 	//ステータスの初期化と名前の入力を行う
@@ -20,62 +23,69 @@ int Game_main(Chara *chara) {
 		chara->p_setName();
 		Data_Save(chara);
 	}
+	Chara enemy;
+	enemy.Load();
+	enemy.set_enemy_status(d_ene,&enemy);
 
 	bool _Gameover = false;
-	int Command_state = 5;
+	int Command_state = -1;
 	int Command_select = 0;
+	int my_act = 0;
+	int ene_at = 0;
+	//0->chara 1->enemy
+	int turn = 0;
+	int counter = 0;
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0 && _Gameover != true) {
 		UI_game(*chara,Command_state,Command_select % 5);
+		UI_game_enemy_status(enemy);
 		DrawFormatString(200, 200, cWhite, "state : %d\nselect : %d", Command_state, Command_select);
+		DrawFormatString(200, 250, cWhite, "turn : %d", turn);
+		DrawFormatString(200, 300, cWhite, "type : %d", d_ene->Ene_Type);
+
 		//Debug
 		if (Key[KEY_INPUT_0] % 5  == 1) {
 			chara->c_sta.HP--;
 		}
+		if (Key[KEY_INPUT_1] % 5 == 1) {
+			enemy.c_sta.HP--;
+		}
 		//HPが0以下になったらゲームオーバー
-		if (chara->check_status(chara)) {
+		if (chara->check_status(chara )|| turn == -1) {
+			turn = -1;
 			_Gameover = Gameover();
+		}
+		if (enemy.check_status(&enemy) || turn == -2) {
+			turn = -2;
+			Clear();
+			if (counter == 0) {
+				d_ene->Ene_Type = GetRand(5);
+				d_ene->Floor++;
+				d_ene->Lv += GetRand(2);
+				if (Data_Save_D(d_ene) == -1) {
+					DxLib_End();
+					return 0;
+				}
+				counter++;
+			}
 		}
 		//Lvは0以下にならないのでもし
 		//なった場合アプリケーションエラーを実行
 		else if (chara->check_status(chara) == -1) {
 			GameError();
 		}
-		if (Key[KEY_INPUT_RIGHT] == 1) {
-			Command_select++;
-		}
-		if (Key[KEY_INPUT_LEFT] == 1) {
-			Command_select--;
-		}
-		if (Key[KEY_INPUT_RETURN] == 1) {
-			//もし各コマンドでBackを選択したらコマンド選択に戻る
-			if (Command_state != 5 && Command_select % 5 == 4) {
-				Command_state = 5;
-				Command_select = 0;
-			}
-			//そうでないならコマンド選択を行う
-			else {
-				if (Command_select <= 3) {
-					Command_state = Command_select % 5;
-					Command_select = 0;
-				}
-			}
 
-			if (Command_state != 5 && Command_select % 5 != 4) {
-				switch (Command_state)
-				{
-				case ATTACK:
-					Game_battle_Attack(*chara,Command_select);
-					break;
-				case ITEM:
-					break;
-				case ACTION:
-					break;
-				default:
-					break;
-				}
+		if (turn == 0) {
+			chara->Command(&Command_select, &Command_state, chara, &enemy,&turn,&my_act);
+		}
+		else if(turn == 1){
+			enemy.enemy_attack(&ene_at,chara, &enemy);
+			turn = 0;
+		}
+		else {
+			if (Key[KEY_INPUT_ESCAPE]) {
+				break;
 			}
 		}
-		Command_select > 0 ? Command_select%=5 : Command_select = 5;		
 	}
 
 	chara->c_sta.HP = chara->c_sta.MaxHP;
@@ -105,4 +115,8 @@ void GameError() {
 	DrawStringToHandle(500, 100, "Application Error!!!", cWhite, gFont00, FALSE, FALSE);
 	DrawStringToHandle(500, 120, error_sentence, cWhite, gFont00, FALSE, FALSE);
 
+}
+
+void Clear() {
+	DrawStringToHandle(500, 10, "CLEAR!!", cWhite, gFont00, FALSE, FALSE);
 }

@@ -20,9 +20,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//Charaクラスのインスタンス生成
 	Chara chara;
+	Dungeon enemy;
 
 	//もしセーブデータ格納ファイルが開けなかった場合アプリを強制終了
-	if (Data_Load(&chara) == -1) {
+	if (Load_All_Data(&chara,&enemy) == -1) {
 		DxLib_End();
 		return 0;
 	}
@@ -35,7 +36,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			//Game.cpp及びGame.hへ
 		case 0:
 			//もしGameが例外参照した場合アプリを強制終了
-			if (Game_main(&chara) == -1) {
+			if (Game_main(&chara,&enemy) == -1) {
 				DxLib_End(); return 0;
 			}
 			break;
@@ -58,7 +59,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		DxLib_End();
 		return 0;
 	}
-	
+	if (Data_Save_D(&enemy) == -1) {
+		DxLib_End();
+		return 0;
+	}
 
 	DxLib_End();
 	return 0;

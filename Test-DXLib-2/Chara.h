@@ -16,6 +16,14 @@ typedef struct _STATUS{
 	int MP;
 }STATUS;
 
+
+//ダンジョンのデータ
+typedef struct Dungeon {
+	int Floor;
+	int Lv;
+	int Ene_Type;
+}_Dungeon;
+
 //Charaクラス　自分のクラス
 class Chara
 {
@@ -25,6 +33,7 @@ public:
 	void p_setName() {
 		setName(c_sta.name);
 	}
+	void set_enemy_status(Dungeon*,Chara*);
 
 	int check_status(Chara*);
 
@@ -46,6 +55,20 @@ public:
 			return 0;
 		}
 	}
+
+	void Command(int*,int*,Chara* chara, Chara* enemy,int*,int*);
+	void ATK(int select,Chara *chara,Chara *enemy);
+	void ATK_01(Chara* chara, Chara* enemy);
+	void ATK_02(Chara* chara, Chara* enemy);
+	void Item(int select, Chara* chara, Chara* enemy);
+	void Item_01(Chara* chara, Chara* enemy);
+	void Item_02(Chara* chara, Chara* enemy);
+	void Action(int select, Chara* chara, Chara* enemy);
+	void Action_01(Chara* chara, Chara* enemy);
+	void Action_02(Chara* chara, Chara* enemy);
+	void enemy_attack(int *ene_at,Chara* chara, Chara* enemy);
+
+	//void Dun_to_Data(Dungeon*, Chara*);
 private:
 	//名前の設定
 	void setName(char name[256]) {

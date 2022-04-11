@@ -61,6 +61,8 @@ void UI_game(Chara chara,int state,int select) {
 	UI_game_command(state,select);
 }
 
+
+
 int UI_game_command_coordinate = 20;
 
 typedef struct _UI_game_command_text {
@@ -72,8 +74,8 @@ _UI_game_command_text command_text[8] = {
 	{
 		"Panch",
 		"kick",
-		"\0",
-		"\0",
+		"Now Developping",
+		"Now Developping",
 		"Back",
 	},
 
@@ -81,17 +83,19 @@ _UI_game_command_text command_text[8] = {
 	{
 		"Meat",
 		"Fish",
-		"\0",
-		"\0",
+		"Now Developping",
+		"Now Developping",
 		"Back"
 	},
 
 	//Action
 	{
-		"Talk",
-		"Angry",
-		"\0",
-		"\0",
+		//"Talk",
+		"Now Developping",
+		"Now Developping",
+		//"Angry",
+		"Now Developping",
+		"Now Developping",
 		"Back"
 	},
 
@@ -104,8 +108,8 @@ _UI_game_command_text command_text[8] = {
 		"Attack",
 		"Item",
 		"Action",
-		"\0",
-		"\0",
+		"Now Developping",
+		"Now Developping",
 	},
 };
 
@@ -114,7 +118,7 @@ int UI_game_command(int state,int select) {
 	//TODO
 	//選択されたボックスの色を変更する
 	switch (state) {
-	case 5://コマンド選択時
+	case -1://コマンド選択時
 		for (int i = 0; i < 5; i++, UI_game_command_coordinate += 250) {
 			DrawBox(UI_game_command_coordinate, WINDOW_SIZE_Ver - 140, UI_game_command_coordinate + 240, WINDOW_SIZE_Ver - 20, cWhite, FALSE);
 			if (select == i) {
@@ -135,10 +139,10 @@ int UI_game_command(int state,int select) {
 		UI_game_command_Action(select);
 		break;
 	case 3:
-
+		DrawFormatStringToHandle(UI_game_command_coordinate + 50, WINDOW_SIZE_Ver - 60, cOrange, gFont00, "Please push Enter");
 		break;
 	case 4:
-
+		DrawFormatStringToHandle(UI_game_command_coordinate + 50, WINDOW_SIZE_Ver - 60, cOrange, gFont00, "Please push Enter");
 		break;
 	}
 
@@ -216,4 +220,25 @@ void UI_game_chara_status(Chara chara) {
 	DrawFormatString(300, 300, cWhite, "Debug : %f", HP_ber);
 	DrawBox(20, 490, WINDOW_SIZE_Bes / 4 - 20, 510, cWhite, FALSE);
 	DrawBox(20, 490, static_cast<int>((WINDOW_SIZE_Bes / 4 - 40) * HP_ber) + 20, 510, cWhite, TRUE);
+}
+
+char UI_enemy_Stutas_name[4][32] = {
+	"Name",
+	"Lv",
+	"HP",
+};
+int UI_game_enemy_status_coordinate;
+void UI_game_enemy_status(Chara enemy) {
+	UI_game_enemy_status_coordinate = 170;
+	for (int i = 0; i < 4; i++, UI_game_enemy_status_coordinate += 80) {
+		DrawFormatStringToHandle(970, UI_game_enemy_status_coordinate, cWhite, gFont00, UI_enemy_Stutas_name[i]);
+	}
+	DrawFormatStringToHandle(970, 210, cWhite, gFont00, "%s", enemy.c_sta.name);
+	DrawFormatStringToHandle(970, 290, cWhite, gFont00, "%d", enemy.c_sta.Lv);
+	DrawFormatStringToHandle(970, 370, cWhite, gFont00, "%d / %d", enemy.c_sta.HP, enemy.c_sta.MaxHP);
+	HP_ber = static_cast<double>(enemy.c_sta.HP) / static_cast<double>(enemy.c_sta.MaxHP);
+	DrawFormatString(1000, 300, cWhite, "Debug : %f", HP_ber);
+	DrawFormatString(1000, 350, cWhite, "ATK : %d", enemy.c_sta.ATK[0]);
+	DrawBox(970, 490, 1220, 510, cWhite, FALSE);
+	DrawBox(970, 490, static_cast<int>(970 + 250 * HP_ber), 510, cWhite, TRUE);
 }

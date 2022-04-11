@@ -3,8 +3,9 @@
 #include "myfuncs.h"
 #include <conio.h>
 #include "Chara.h"
+#include "Data.h"
 
-int Game_main(Chara*);
+int Game_main(Chara*,Dungeon*);
 bool Gameover();
 void GameError();
 
